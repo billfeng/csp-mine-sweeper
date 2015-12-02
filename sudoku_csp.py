@@ -208,60 +208,6 @@ def sudoku_csp_model_2(initial_sudoku_board):
         constraint.add_satisfying_tuples(sat_tuples)
         sudoku_csp.add_constraint(constraint)
 
-        '''
-
-        d1 = variable_array[i][0].cur_domain()
-        d2 = variable_array[i][1].cur_domain()
-        d3 = variable_array[i][2].cur_domain()
-        d4 = variable_array[i][3].cur_domain()
-        d5 = variable_array[i][4].cur_domain()
-        d6 = variable_array[i][5].cur_domain()
-        d7 = variable_array[i][6].cur_domain()
-        d8 = variable_array[i][7].cur_domain()
-        d9 = variable_array[i][8].cur_domain()
-
-        holder = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        for v1 in d1:
-            if v1 not in holder:
-                holder[0] = v1
-                for v2 in d2:
-                    if v2 not in holder:
-                        holder[1] = v2
-                        for v3 in d3:
-                            if v3 not in holder:
-                                holder[2] = v3
-                                for v4 in d4:
-                                    if v4 not in holder:
-                                        holder[3] = v4
-                                        for v5 in d5:
-                                            if v5 not in holder:
-                                                holder[4] = v5
-                                                for v6 in d6:
-                                                    if v6 not in holder:
-                                                        holder[5] = v6
-                                                        for v7 in d7:
-                                                            if v7 not in holder:
-                                                                holder[6] = v7
-                                                                for v8 in d8:
-                                                                    if v8 not in holder:
-                                                                        holder[7] = v8
-                                                                        for v9 in d9:
-                                                                            if v9 not in holder:
-                                                                                holder[8] = v9
-                                                                                result.append(list(holder))
-                                                                                holder[8] = 0
-                                                                        holder[7] = 0
-                                                                holder[6] = 0
-                                                        holder[5] = 0
-                                                holder[4] = 0
-                                        holder[3] = 0
-                                holder[2] = 0
-                        holder[1] = 0
-                holder[0] = 0
-        constraint.add_satisfying_tuples(result)
-        sudoku_csp.add_constraint(constraint)
-        '''
-
     for i in range(0, 9):
         var_arr = []
         for j in range(0, 9):
