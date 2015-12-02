@@ -17,12 +17,12 @@
           then newly_instantiated_variable is the most
            recently assigned variable of the search.
       else:
-          progator is called before any assignments are made
+          propagator is called before any assignments are made
           in which case it must decide what processing to do
            prior to any variables being assigned. SEE BELOW
 
        The propagator returns True/False and a list of (Variable, Value) pairs.
-       Return is False if a deadend has been detected by the propagator.
+       Return is False if a dead end has been detected by the propagator.
        in this case bt_search will backtrack
        return is true if we can continue.
 
@@ -44,7 +44,7 @@
         only one variable) and we forward_check these constraints.
 
         for gac we establish initial GAC by initializing the GAC queue
-        with all constaints of the csp
+        with all constraints of the csp
 
 
       PROPAGATOR called with newly_instantiated_variable = a variable V
@@ -80,9 +80,74 @@ def prop_FC(csp, newVar=None):
        only one uninstantiated variable. Remember to keep 
        track of all pruned variable,value pairs and return '''
 #IMPLEMENT
+    pruned = []
+    # keep track of pruned values
+    if newVar:
+        constraints = csp.get_cons_with_var(newVar)
+        # get constraints involving the variable if a variable is given
+    else:
+        constraints = csp.get_all_cons()
+        # get all constraints if no variable is given
+
+    for constraint in constraints:
+        if constraint.get_n_unasgn() == 1:
+            # iterate through all constraints with only 1 unassigned variable
+
+            variable = constraint.get_unasgn_vars()[0]
+            for d in variable.cur_domain():
+                # try all the values in the domain of that variable
+
+                variable.assign(d)
+                values = []
+                for var in constraint.get_scope():
+                    values.append(var.get_assigned_value())
+                    # fill the list "values" with assigned values of the variables in the scope of the constraint
+
+                if not constraint.check(values):
+                    variable.prune_value(d)
+                    pruned.append((variable, d))
+                    # if these values do not pass the constraint check, prune the assigned value from domain
+
+                variable.unassign() # unassign variable
+
+            if variable.cur_domain_size() == 0:
+                return False, pruned
+                # return false if nothing is left in domain after the prune
+
+    return True, pruned
+    # return true if there's still values left in the domain after all the prunes
 
 def prop_GAC(csp, newVar=None):
     '''Do GAC propagation. If newVar is None we do initial GAC enforce 
        processing all constraints. Otherwise we do GAC enforce with
        constraints containing newVar on GAC Queue'''
 #IMPLEMENT
+    pruned = []
+    if newVar:
+        constraints = csp.get_cons_with_var(newVar)
+        # get constraints involving the variable if a variable is given
+    else:
+        constraints = csp.get_all_cons()
+        # get all constraints if no variable is given
+
+    while constraints:
+        constraint = constraints.pop(0)
+        # while the queue still has constraints in it, take one out and work on it
+
+        for variable in constraint.get_scope():
+            for d in variable.cur_domain():
+                # iterate through all the values in the domain of the variables in the constraint
+
+                if not constraint.has_support(variable, d):
+                    variable.prune_value(d)
+                    pruned.append((variable,d))
+                    # prune the value from domain of variable if it has no support
+
+                    if variable.cur_domain_size() == 0:
+                        return False, pruned
+                        # return false after the prune if domain becomes empty
+                    else:
+                        constraints += list(set(csp.get_cons_with_var(variable)) - set(constraints))
+                        # otherwise add constraints involving the changed variable to the queue and continue
+    return True, pruned
+    # return true if supporting tuple exists in all the constraints for the changed variable
