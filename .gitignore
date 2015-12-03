@@ -6,3 +6,5 @@
 .idea/.name
 
 .idea/vcs.xml
+
+*.pyc

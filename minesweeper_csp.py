@@ -1,16 +1,23 @@
-#Look for #IMPLEMENT tags in this file. These tags indicate what has
-#to be implemented to complete the warehouse domain.  
-
 '''
-Construct and return sudoku CSP models.
+Construct and return minesweeper CSP models.
 '''
 
 from cspbase import *
 import itertools
 import propagators
 
+def minesweeper_csp_model_2d(initial_mine_board):
+    return None
+
+def minesweeper_csp_model_3d(initial_mine_board):
+    return None
+
+'''
 def sudoku_csp_model_1(initial_sudoku_board):
-    '''Return a CSP object representing a sudoku CSP problem along 
+
+#comment
+
+       Return a CSP object representing a sudoku CSP problem along
        with an array of variables for the problem. That is return
 
        sudoku_csp, variable_array
@@ -72,7 +79,8 @@ def sudoku_csp_model_1(initial_sudoku_board):
        constraints. All of the constraints of Model_1 MUST BE binary
        constraints (i.e., constraints whose scope includes two and
        only two variables).
-    '''
+
+#comment
     
 #IMPLEMENT
     variables = []
@@ -94,9 +102,11 @@ def sudoku_csp_model_1(initial_sudoku_board):
     for i in range(0, 9):
         for j in range(0, 9):
             for k in range(j + 1, 9):
-                constraint = Constraint("C(({},{}),({},{}))".format(i+1,j+1,i+1,k+1),[variable_array[i][j], variable_array[i][k]])
+                constraint = Constraint("C(({},{}),({},{}))".format(i+1,j+1,i+1,k+1),
+                                        [variable_array[i][j], variable_array[i][k]])
                 sat_tuples = []
-                for sat_tuple in itertools.product(variable_array[i][j].cur_domain(), variable_array[i][k].cur_domain()):
+                for sat_tuple in itertools.product(variable_array[i][j].cur_domain(),
+                                                   variable_array[i][k].cur_domain()):
                     if sat_tuple[0] != sat_tuple[1]:
                         sat_tuples.append(sat_tuple)
                 constraint.add_satisfying_tuples(sat_tuples)
@@ -105,9 +115,11 @@ def sudoku_csp_model_1(initial_sudoku_board):
     for i in range(0, 9):
         for j in range(0, 9):
             for k in range(i + 1, 9):
-                constraint = Constraint("C(({},{}),({},{}))".format(i+1,j+1,k+1,j+1),[variable_array[i][j], variable_array[k][j]])
+                constraint = Constraint("C(({},{}),({},{}))".format(i+1,j+1,k+1,j+1),
+                                        [variable_array[i][j], variable_array[k][j]])
                 sat_tuples = []
-                for sat_tuple in itertools.product(variable_array[i][j].cur_domain(), variable_array[k][j].cur_domain()):
+                for sat_tuple in itertools.product(variable_array[i][j].cur_domain(),
+                                                   variable_array[k][j].cur_domain()):
                     if sat_tuple[0] != sat_tuple[1]:
                         sat_tuples.append(sat_tuple)
                 constraint.add_satisfying_tuples(sat_tuples)
@@ -119,9 +131,11 @@ def sudoku_csp_model_1(initial_sudoku_board):
                 for l in range(0, 3):
                     for m in range(k*3+l+1, 9):
                         if k!=m//3 and l!=m%3:
-                            constraint = Constraint("C(({},{}),({},{}))".format(i*3+k+1,j*3+l+1,i*3+m//3+1,j*3+m%3+1), [variable_array[i*3+k][j*3+l], variable_array[i*3+m//3][j*3+m%3]])
+                            constraint = Constraint("C(({},{}),({},{}))".format(i*3+k+1,j*3+l+1,i*3+m//3+1,j*3+m%3+1),
+                                                    [variable_array[i*3+k][j*3+l], variable_array[i*3+m//3][j*3+m%3]])
                             sat_tuples = []
-                            for sat_tuple in itertools.product(variable_array[i*3+k][j*3+l].cur_domain(), variable_array[i*3+m//3][j*3+m%3].cur_domain()):
+                            for sat_tuple in itertools.product(variable_array[i*3+k][j*3+l].cur_domain(),
+                                                               variable_array[i*3+m//3][j*3+m%3].cur_domain()):
                                 if sat_tuple[0] != sat_tuple[1]:
                                     sat_tuples.append(sat_tuple)
                             constraint.add_satisfying_tuples(sat_tuples)
@@ -132,10 +146,16 @@ def sudoku_csp_model_1(initial_sudoku_board):
             item.restore_curdom()
     return sudoku_csp, variable_array
 
+'''
+
 ##############################
 
+'''
 def sudoku_csp_model_2(initial_sudoku_board):
-    '''Return a CSP object representing a sudoku CSP problem along 
+
+#comment
+
+       Return a CSP object representing a sudoku CSP problem along
        with an array of variables for the problem. That is return
 
        sudoku_csp, variable_array
@@ -170,7 +190,8 @@ def sudoku_csp_model_2(initial_sudoku_board):
     a single value in their domain). model_2 should create these
     all-different constraints between the relevant variables, then
     invoke enforce_gac on those constraints.
-    '''
+
+#comment
 
 #IMPLEMENT
     variables = []
@@ -259,6 +280,9 @@ def sudoku_csp_model_2(initial_sudoku_board):
             item.restore_curdom()
     return sudoku_csp, variable_array
 
+'''
+
+'''
 
 def reduce(table,initial):
     for i in range(0, 9):
@@ -273,7 +297,8 @@ def reduce(table,initial):
                 blockj = j//3
                 for k in range(0, 3):
                     for l in range(0, 3):
-                        if (blocki*3 + k != i or blockj*3 + l != j) and initial[i][j] in table[blocki*3 + k][blockj*3 + l].cur_domain():
+                        if (blocki*3 + k != i or blockj*3 + l != j) and
+                            initial[i][j] in table[blocki*3 + k][blockj*3 + l].cur_domain():
                             table[blocki*3 + k][blockj*3 + l].prune_value(initial[i][j])
 
 
@@ -289,3 +314,5 @@ def recursive_sat(dm, holder, sat_tuples):
             if item not in holder:
                 holder[8-len(dm)] = item
                 recursive_sat(list(dm), list(holder), sat_tuples)
+
+'''
