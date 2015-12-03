@@ -1,7 +1,7 @@
 # Extra Tests Written by Daniel Kats
 # CDF ID: g1dbkats
 
-from sudoku_csp import *
+from minesweeper_csp import *
 from propagators import *
 
 num_boards=244
