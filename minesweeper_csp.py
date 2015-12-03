@@ -7,10 +7,56 @@ import itertools
 import propagators
 
 def minesweeper_csp_model_2d(initial_mine_board):
-    return None
+    variables = []
+    variable_array = []
+    for i in range(0, len(initial_mine_board)):
+        row = []
+        for j in range(0, len(initial_mine_board[0])):
+            if initial_mine_board[i][j] == 0:
+                variable = Variable("V({},{})".format(i, j), [0, 9])
+            else:
+                variable = Variable("V({},{})".format(i, j), [initial_mine_board[i][j]])
+            variables.append(variable)
+            row.append(variable)
+        variable_array.append(row)
+
+    reduce(variable_array, initial_mine_board)
+    mine_csp = CSP("Minesweeper-2d", variables)
+
+    # add constraints here
+
+    for row in variable_array:
+        for item in row:
+            item.restore_curdom()
+    return mine_csp, variable_array
 
 def minesweeper_csp_model_3d(initial_mine_board):
-    return None
+    variables = []
+    variable_array = []
+    for i in range(0, len(initial_mine_board)):
+        layer = []
+        for j in range(0, len(initial_mine_board[0])):
+            row = []
+            for k in range(0, len(initial_mine_board[0][0])):
+                if initial_mine_board[i][j][k] == 0:
+                    variable = Variable("V({},{},{})".format(i, j, k), [0, 9])
+                else:
+                    variable = Variable("V({},{},{})".format(i, j, k), [initial_mine_board[i][j]])
+                variables.append(variable)
+                row.append(variable)
+            layer.append(row)
+        variable_array.append(layer)
+
+    reduce(variable_array, initial_mine_board)
+    mine_csp = CSP("Minesweeper-3d", variables)
+
+    # add constraints here
+
+    for layer in variable_array:
+        for row in layer:
+            for item in row:
+                item.restore_curdom()
+    return mine_csp, variable_array
 
 '''
 def sudoku_csp_model_1(initial_sudoku_board):
@@ -282,8 +328,6 @@ def sudoku_csp_model_2(initial_sudoku_board):
 
 '''
 
-'''
-
 def reduce(table,initial):
     for i in range(0, 9):
         for j in range(0, 9):
@@ -297,8 +341,7 @@ def reduce(table,initial):
                 blockj = j//3
                 for k in range(0, 3):
                     for l in range(0, 3):
-                        if (blocki*3 + k != i or blockj*3 + l != j) and
-                            initial[i][j] in table[blocki*3 + k][blockj*3 + l].cur_domain():
+                        if (blocki*3 + k != i or blockj*3 + l != j) and initial[i][j] in table[blocki*3 + k][blockj*3 + l].cur_domain():
                             table[blocki*3 + k][blockj*3 + l].prune_value(initial[i][j])
 
 
@@ -314,5 +357,3 @@ def recursive_sat(dm, holder, sat_tuples):
             if item not in holder:
                 holder[8-len(dm)] = item
                 recursive_sat(list(dm), list(holder), sat_tuples)
-
-'''
