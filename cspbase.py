@@ -209,7 +209,7 @@ class Constraint:
         The order of the variables in the scope is critical to the
         functioning of the constraint.
 
-        Consraints are implemented as storing a set of satisfying
+        Constraints are implemented as storing a set of satisfying
         tuples (i.e., each tuple specifies a value for each variable
         in the scope such that this sequence of values satisfies the
         constraints).

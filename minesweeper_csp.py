@@ -6,14 +6,40 @@ from cspbase import *
 import itertools
 import propagators
 
+
 def minesweeper_csp_model_2d(initial_mine_board):
+    '''
+    Return a CSP object representing a minesweeper game.
+
+    The input mine field would be represented by a list of lists of integers.
+    An example mine field:
+       -------------------
+       |0|0|1|0|3|0|0|4|0|
+       |1|2|2|3|0|4|0|0|2|
+       |0|2|0|2|1|2|3|3|2|
+       |2|3|2|2|1|0|1|0|1|
+       |0|1|2|0|2|0|1|1|1|
+       |1|1|2|0|2|0|0|0|0|
+       -------------------
+
+    And the solution should look something like this:
+       -------------------
+       | | |1|*|3|*|*|4|*|
+       |1|2|2|3|*|4|*|*|2|
+       |*|2|*|2|1|2|3|3|2|
+       |2|3|2|2|1| |1|*|1|
+       |*|1|2|*|2| |1|1|1|
+       |1|1|2|*|2| | | | |
+       -------------------
+    '''
+
     variables = []
     variable_array = []
     for i in range(0, len(initial_mine_board)):
         row = []
         for j in range(0, len(initial_mine_board[0])):
             if initial_mine_board[i][j] == 0:
-                variable = Variable("V({},{})".format(i, j), [0, 9])
+                variable = Variable("V({},{})".format(i, j), [" ", "*"])
             else:
                 variable = Variable("V({},{})".format(i, j), [initial_mine_board[i][j]])
             variables.append(variable)
@@ -24,11 +50,17 @@ def minesweeper_csp_model_2d(initial_mine_board):
     mine_csp = CSP("Minesweeper-2d", variables)
 
     # add constraints here
+    for i in range(0, len(variable_array)):
+        for j in range(0, len(variable_array[0])):
+            if initial_mine_board[i][j] != 0:
+                constraint = Constraint("C{},{}".format(i, j), )
+                add_mine_tuples(constraint, initial_mine_board[i][j])
 
     for row in variable_array:
         for item in row:
             item.restore_curdom()
     return mine_csp, variable_array
+
 
 def minesweeper_csp_model_3d(initial_mine_board):
     variables = []
@@ -39,7 +71,7 @@ def minesweeper_csp_model_3d(initial_mine_board):
             row = []
             for k in range(0, len(initial_mine_board[0][0])):
                 if initial_mine_board[i][j][k] == 0:
-                    variable = Variable("V({},{},{})".format(i, j, k), [0, 9])
+                    variable = Variable("V({},{},{})".format(i, j, k), [True, False])
                 else:
                     variable = Variable("V({},{},{})".format(i, j, k), [initial_mine_board[i][j]])
                 variables.append(variable)
@@ -57,6 +89,11 @@ def minesweeper_csp_model_3d(initial_mine_board):
             for item in row:
                 item.restore_curdom()
     return mine_csp, variable_array
+
+def add_mine_tuples(constraint, number):
+    fors
+    if number == 1:
+
 
 '''
 def sudoku_csp_model_1(initial_sudoku_board):
@@ -81,8 +118,6 @@ def sudoku_csp_model_1(initial_sudoku_board):
        such that variable_array[i][j] is the Variable (object) that
        you built to represent the value to be placed in cell i,j of
        the sudokup board (indexed from (0,0) to (8,8))
-
-       
        
        The input board is specified as a list of 9 lists. Each of the
        9 lists represents a row of the board. If a 0 is in the list it
@@ -103,7 +138,7 @@ def sudoku_csp_model_1(initial_sudoku_board):
        -------------------
        would be represented by the list of lists
        
-       [[0,0,2,0,9,0,0,6,0],
+      [[0,0,2,0,9,0,0,6,0],
        [0,4,0,0,0,1,0,0,8],
        [0,7,0,4,2,0,0,0,3],
        [5,0,0,0,0,0,3,0,0],
@@ -328,21 +363,21 @@ def sudoku_csp_model_2(initial_sudoku_board):
 
 '''
 
-def reduce(table,initial):
-    for i in range(0, 9):
-        for j in range(0, 9):
-            if initial[i][j] != 0:
-                for k in range(0, 9):
-                    if k != i and initial[i][j] in table[k][j].cur_domain():
-                        table[k][j].prune_value(initial[i][j])
-                    if k != j and initial[i][j] in table[i][k].cur_domain():
-                        table[i][k].prune_value(initial[i][j])
-                blocki = i//3
-                blockj = j//3
-                for k in range(0, 3):
-                    for l in range(0, 3):
-                        if (blocki*3 + k != i or blockj*3 + l != j) and initial[i][j] in table[blocki*3 + k][blockj*3 + l].cur_domain():
-                            table[blocki*3 + k][blockj*3 + l].prune_value(initial[i][j])
+
+def reduce(table, initial):
+    for i in range(0, len(initial)):
+        for j in range(0, len(initial[0])):
+            if initial[i][j] == 0 and no_indicator(initial, i, j):
+                table[i][j].prune_value(True)
+
+
+def no_indicator(initial, i, j):
+    for k in range(-1, 2):
+        for l in range(-1, 2):
+            if 0 <= (i + k) < len(initial) and 0 <= (j + l) < len(initial[0]):
+                if initial[i + k][j + l] !=0:
+                    return False
+    return True
 
 
 def recursive_sat(dm, holder, sat_tuples):
