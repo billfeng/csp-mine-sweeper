@@ -5,7 +5,7 @@ def mine_board_generator(width, height):
     for i in range(0, width):
         for j in range(0, height):
             # generate a random number here, and have a chance for the board to be set to "*"
-            if (random.randint(0,4) == 0):
+            if (random.randint(0,5) == 0):
                 mine_field = "*"
 
     mine_board = [width][height]
