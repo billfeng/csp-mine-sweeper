@@ -54,7 +54,15 @@ def minesweeper_csp_model_2d(initial_mine_board):
         for j in range(0, len(variable_array[0])):
             if initial_mine_board[i][j] != 0:
                 constraint = Constraint("C{},{}".format(i, j), get_variables_around(i, j, variable_array))
-                add_mine_tuples(constraint, initial_mine_board[i][j])
+
+                domain = []
+                for k in range(-1, 2):
+                    for l in range(-1, 2):
+                        if 0 <= (i + k) < len(variable_array) and 0 <= (j + l) < len(variable_array[0]):
+                            domain.append(variable_array[i + k][j + l])
+                holder = [0, 0, 0, 0, 0, 0, 0, 0]
+                sat_tuples = []
+                recursive_sat(domain, holder, sat_tuples)
                 mine_csp.add_constraint(constraint)
 
     for row in variable_array:
@@ -97,10 +105,6 @@ def minesweeper_csp_model_3d(initial_mine_board):
             for item in row:
                 item.restore_curdom()
     return mine_csp, variable_array
-
-def add_mine_tuples(constraint, number):
-    fors
-    if number == 1:
 
 
 '''
@@ -425,15 +429,15 @@ def get_variables_3d(i, j, k, table):
     return array
 
 
-def recursive_sat(dm, holder, sat_tuples):
-    if len(dm) == 1:
-        for item in dm[0]:
+def recursive_sat(domain, holder, sat_tuples):
+    if len(domain) == 1:
+        for item in domain[0]:
             if item not in holder:
                 holder[8] = item
                 sat_tuples.append(list(holder))
     else:
-        temp = dm.pop(0)
+        temp = domain.pop(0)
         for item in temp:
             if item not in holder:
-                holder[8-len(dm)] = item
-                recursive_sat(list(dm), list(holder), sat_tuples)
+                holder[8-len(domain)] = item
+                recursive_sat(list(domain), list(holder), sat_tuples)
