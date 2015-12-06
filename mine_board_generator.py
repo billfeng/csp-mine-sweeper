@@ -15,5 +15,5 @@ def mine_board_generator(width, height):
                         if 0 <= i + k < width and 0 <= j + l < height:
                             if mine_field[i + k][j + l] == "*":
                                 mine_board += 1
-    
+
     return mine_board
