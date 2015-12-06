@@ -18,4 +18,4 @@ def mine_board_generator(width, height):
                             if mine_field[i + k][j + l] == "*":
                                 mine_board[i][j] += 1
 
-    return mine_board
+    return mine_field, mine_board
