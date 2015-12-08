@@ -130,7 +130,6 @@ def reduce_3d(table, initial):
         for j in range(0, len(initial[0])):
             for k in range(0, len(initial[0][0])):
                 if initial[i][j][k] == 0 and no_indicator_3d(initial, i, j, k):
-                    print(table)
                     table[i][j][k].prune_value("*")
 
 
@@ -138,7 +137,7 @@ def no_indicator_3d(initial, i, j, k):
     for l in range(-1, 2):
         for m in range(-1, 2):
             for n in range(-1, 2):
-                if 0 <= (i + l) < len(initial) and 0 <= (j + m) < len(initial[0]) and 0 <= (k + n) < len(initial[0]):
+                if 0 <= (i + l) < len(initial) and 0 <= (j + m) < len(initial[0]) and 0 <= (k + n) < len(initial[0][0]):
                     if initial[i + l][j + m][k + n] !=0:
                         return False
     return True

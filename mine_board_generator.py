@@ -18,6 +18,8 @@ def mine_board_generator_2d(width, height):
                             if mine_field[i + k][j + l] == "*":
                                 mine_board[i][j] += 1
                 mine_field[i][j] = mine_board[i][j]
+                if mine_field[i][j] == 0:
+                    mine_field[i][j] = " "
 
     return mine_board, mine_field
 
