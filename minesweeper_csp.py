@@ -91,19 +91,21 @@ def minesweeper_csp_model_3d(initial_mine_board):
     # add constraints here
     for i in range(0, len(variable_array)):
         for j in range(0, len(variable_array[0])):
-            if initial_mine_board[i][j] != 0:
-                constraint = Constraint("C{},{}".format(i, j), get_variables_around(i, j, variable_array))
+            for k in range(0, len(variable_array[0][0])):
+                if initial_mine_board[i][j][k] != 0:
+                    constraint = Constraint("C{},{},{}".format(i, j, k), get_variables_3d(i, j, k, variable_array))
 
-                domain = []
-                for k in range(-1, 2):
+                    domain = []
                     for l in range(-1, 2):
-                        if 0 <= (i + k) < len(variable_array) and 0 <= (j + l) < len(variable_array[0]):
-                            domain.append(variable_array[i + k][j + l])
-                holder = [0, 0, 0, 0, 0, 0, 0, 0]
-                sat_tuples = []
-                recursive_sat(domain, holder, sat_tuples)
-                constraint.add_satisfying_tuples(sat_tuples)
-                mine_csp.add_constraint(constraint)
+                        for m in range(-1, 2):
+                            for n in range(-1, 2):
+                                if 0 <= (i + l) < len(variable_array) and 0 <= (j + m) < len(variable_array[0]) and 0 <= (k + n) < len(variable_array[0][0]):
+                                    domain.append(variable_array[i + l][j + m][k + n])
+                    holder = [0, 0, 0, 0, 0, 0, 0, 0]
+                    sat_tuples = []
+                    recursive_sat(domain, holder, sat_tuples)
+                    constraint.add_satisfying_tuples(sat_tuples)
+                    mine_csp.add_constraint(constraint)
 
     return mine_csp, variable_array
 
