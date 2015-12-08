@@ -21,7 +21,7 @@ if __name__ == "__main__":
     
     if dim == 2:
         while test_count > 0:
-            b = mine_board_generator_2d(height, width)
+            b, res = mine_board_generator_2d(height, width)
             print("Solving board: ")
             for row in b:
                 print(row)
@@ -36,7 +36,7 @@ if __name__ == "__main__":
             test_count = test_count - 1
     else:
         while test_count > 0:
-            b = mine_board_generator_3d(height, width, depth)
+            b, res = mine_board_generator_3d(height, width, depth)
             print("Solving board: ")
             for row in b:
                 print(row)
